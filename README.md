@@ -30,7 +30,7 @@ This is a backend application built with Node.js, TypeScript, Fastify, and Prism
 
     ```bash
     git clone <repository-url>
-    cd api-solid
+    cd solid-concepts-in-node-api
     ```
 
 2.  Install dependencies:
@@ -100,11 +100,6 @@ Contributions are welcome! Please follow these steps:
 5.  Ensure all tests pass.
 6.  Submit a pull request.
 
-
-### Prerequisites
-
--   Node.js (>=18)
--   Docker and Docker Compose (for local development)
 
 ### Installation
 
