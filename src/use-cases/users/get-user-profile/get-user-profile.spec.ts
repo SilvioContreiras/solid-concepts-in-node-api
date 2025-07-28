@@ -30,7 +30,7 @@ describe("Get user profile Use Case", () => {
   });
 
   it("should not get a user with wrong id", async () => {
-    expect(() =>
+    await expect(() =>
       getUserProfileUsecase.execute({
         userId: "not-found-id",
       })
