@@ -1,27 +1,29 @@
 import { expect, describe, it, beforeEach, vi, afterEach } from "vitest";
 import { CheckInUseCase } from "./";
 import { InMemoryCheckInRepository } from "@/repositories/in-memory/in-memory-check-in.repository";
-import { InMemoryGymRepository } from "@/repositories/in-memory/in-memory-gyn.repository";
+import { InMemoryGymsRepository } from "@/repositories/in-memory/in-memory-gyms.repository";
 import { Decimal } from "@prisma/client/runtime/library";
+import { MaxNumberOfCheckInsError } from "../errors/max-number-of-checkins.error";
+import { MaxDistanceError } from "../errors/max-distance.error";
 
 let usersRepository: InMemoryCheckInRepository;
-let gymsRepository: InMemoryGymRepository
+let gymsRepository: InMemoryGymsRepository
 let checkInUseCase: CheckInUseCase;
 
 describe("Check-in Use Case", () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     usersRepository = new InMemoryCheckInRepository();
-    gymsRepository = new InMemoryGymRepository();
+    gymsRepository = new InMemoryGymsRepository();
     checkInUseCase = new CheckInUseCase(usersRepository, gymsRepository);
 
-    gymsRepository.items.push({
+    await gymsRepository.create({
         id: "gym-01",
         name: "Gym 01",
         description: "Description Gym 01",
         phone: "11999999999",
-        latitude: new Decimal(-23.5505),
-        longitude: new Decimal(-46.6333),
-    });
+        latitude: -23.5505,
+        longitude: -46.6333,
+    })
 
     vi.useFakeTimers();
   });
@@ -58,7 +60,7 @@ describe("Check-in Use Case", () => {
         userLatitude: -23.5505,
         userLongitude: -46.6333,
       })
-    ).rejects.toBeInstanceOf(Error);
+    ).rejects.toBeInstanceOf(MaxNumberOfCheckInsError);
   });
 
   it("should allow check in in differents dates", async () => {
@@ -102,6 +104,6 @@ describe("Check-in Use Case", () => {
         userLatitude: -23.5505,
         userLongitude: -46.6333,
       })
-    ).rejects.toBeInstanceOf(Error);
+    ).rejects.toBeInstanceOf(MaxDistanceError);
   });
 });
